@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2" location="./profile/profile-Orthogonal-SingleDimensional-SingleProfile-H.3.3/profile-Orthogonal-SingleDimensional-SingleProfile-H.3.3.nc">
   <dimension name="z" length="42" />
-  <attribute name="featureType" value="profile" />
   <attribute name="Conventions" value="CF-1.6" />
+  <attribute name="featureType" value="profile" />
   <variable name="lat" type="float">
     <attribute name="units" value="degrees_north" />
     <attribute name="long_name" value="station latitude" />
@@ -32,11 +32,13 @@
     <attribute name="long_name" value="Water Temperature" />
     <attribute name="units" value="Celsius" />
     <attribute name="coordinates" value="time lat lon z" />
+    <attribute name="missing_value" type="float" value="-999.9" />
   </variable>
   <variable name="humidity" shape="z" type="float">
     <attribute name="long_name" value="Humidity" />
     <attribute name="standard_name" value="specific_humidity" />
     <attribute name="units" value="Percent" />
     <attribute name="coordinates" value="time lat lon z" />
+    <attribute name="missing_value" type="float" value="-999.9" />
   </variable>
 </netcdf>

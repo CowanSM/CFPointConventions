@@ -1,20 +1,17 @@
 #! ruby
 
 require 'numru/netcdf'
-require 'fileutils'
+require_relative '../utils'
 
 include NumRu
 
-base_name = File.basename(__FILE__).gsub(".rb","")
-root_path = File.dirname(__FILE__) + "/" + base_name
-meta_name = root_path + "/" + base_name + ".nc"
-ncml_name = root_path + "/" + base_name + ".ncml"
-cdl_name = root_path + "/" + base_name + ".cdl"
-FileUtils.mkdir(root_path) unless File.exists?(root_path)
+readme = \
+"
+"
 
-file = NetCDF.create(meta_name)
+nc = CFNetCDF.new(__FILE__, readme)
+file = nc.netcdf_file
 file.put_att("featureType","point")
-file.put_att("Conventions","CF-1.6")
 
 o = 100
 obs_dim = file.def_dim("obs",o)
@@ -39,18 +36,22 @@ time = file.def_var("time","int",[obs_dim])
 time.put_att("long_name","time")
 time.put_att("standard_name","time")
 time.put_att("units","seconds since 1990-01-01 00:00:00")
+time.put_att("missing_value",-999,"int")
 
-temp = file.def_var("temperature","float",[obs_dim])
+temp = file.def_var("temperature","sfloat",[obs_dim])
 temp.put_att("long_name","Water Temperature")
 temp.put_att("standard_name","sea_water_temperature")
 temp.put_att("units","Celsius")
 temp.put_att("coordinates", "time lat lon alt")
+temp.put_att("missing_value",-999.9,"sfloat")
 
-humi = file.def_var("humidity","float",[obs_dim])
+humi = file.def_var("humidity","sfloat",[obs_dim])
 humi.put_att("long_name","Humidity")
 humi.put_att("standard_name","specific_humidity")
 humi.put_att("units","Percent")
 humi.put_att("coordinates", "time lat lon alt")
+humi.put_att("missing_value",-999.9,"sfloat")
+
 
 # Stop the definitions, lets write some data
 file.enddef
@@ -66,6 +67,4 @@ humi.put(NArray.float(o).random!(90))
 
 
 file.close
-`ncdump -h #{meta_name} > #{cdl_name}`
-`ncdump -x -h #{meta_name} > #{ncml_name}`
-
+nc.create_output
